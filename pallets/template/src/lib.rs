@@ -6,7 +6,7 @@
 pub use pallet::*;
 pub mod types;
 pub use types::ProjectInfo;
-
+pub use frame_support ;
 #[cfg(test)]
 mod mock;
 
@@ -95,14 +95,15 @@ pub mod pallet {
 			project_id: T::Hash,
 			project: ProjectInfo<T::AccountId, BalanceIn<T>>,
 		) -> DispatchResult {
-			let who = ensure_signed(origin)?;
+			let _who = ensure_signed(origin)?;
 
 			let is_available = Project::<T>::contains_key(project_id);
 
 			ensure!(!is_available, Error::<T>::DuplicateProjectIdNotAllowed);
 
 			// Update the Project storage
-			// todo!()
+			Project::<T>::insert(project_id, project.clone());
+
 
 			Self::deposit_event(Event::<T>::CrowdFundingInitiated { project });
 
@@ -162,12 +163,22 @@ pub mod pallet {
 			if project.total_fund >= project.target_fund {
 
 				// Update the status
-				// todo!()
+				project.status = false;
+
 				// transfer the balance
-				// todo!()
+				// Transfer the balance to the owner
+				T::Currency::transfer(
+					&project.pot_account,
+					&project.owner,
+					project.total_fund,
+					ExistenceRequirement::KeepAlive,
+				)?;
+				
+
 
 				// Update the total fund
-				// todo!()
+				project.total_fund = project.total_fund - project.total_fund;
+
 
 				Self::deposit_event(Event::<T>::CrowdFundWithdrawn {
 					source: project.pot_account.clone(),
@@ -175,7 +186,8 @@ pub mod pallet {
 				});
 
 				// Update the storage
-				// todo!()
+				Project::<T>::insert(project_id, project.clone());
+
 			}
 
 			Ok(())
