@@ -101,7 +101,7 @@ pub mod pallet {
 
 			ensure!(!is_available, Error::<T>::DuplicateProjectIdNotAllowed);
 
-			// Update the Project storage
+			// Update the Project storage (was todo)
 			Project::<T>::insert(project_id, project.clone());
 
 
@@ -162,10 +162,10 @@ pub mod pallet {
 			// Check if the target amount is reached then change the status of a project.
 			if project.total_fund >= project.target_fund {
 
-				// Update the status
+				// Update the status (was todo)
 				project.status = false;
 
-				// transfer the balance
+				// transfer the balance( was todo)
 				// Transfer the balance to the owner
 				T::Currency::transfer(
 					&project.pot_account,
@@ -176,7 +176,7 @@ pub mod pallet {
 				
 
 
-				// Update the total fund
+				// Update the total fund (was todo)
 				project.total_fund = project.total_fund - project.total_fund;
 
 
@@ -185,7 +185,7 @@ pub mod pallet {
 					destination: project.owner.clone(),
 				});
 
-				// Update the storage
+				// Update the storage ( was todo)
 				Project::<T>::insert(project_id, project.clone());
 
 			}
